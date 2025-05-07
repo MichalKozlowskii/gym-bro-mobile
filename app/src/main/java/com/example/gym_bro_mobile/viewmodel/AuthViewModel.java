@@ -73,7 +73,7 @@ public class AuthViewModel extends ViewModel {
                     }
                 } else {
                     Log.d("LoginActivity", "in viewmodel 4");
-                    resultMessage.postValue("Login failed: " + response.message());
+                    resultMessage.postValue("Login failed: " + response.body().string());
                 }
             }
 
