@@ -1,7 +1,6 @@
 package com.example.gym_bro_mobile.viewmodel;
 
 import android.content.Context;
-import android.telecom.Call;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,16 +24,22 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AuthViewModel extends ViewModel {
-    MutableLiveData<String> resultMessage = new MutableLiveData<>();
+    private final MutableLiveData<String> resultMessage = new MutableLiveData<>();
+    private final OkHttpClient client = new OkHttpClient();
 
     public LiveData<String> getResultMessage() {
         return resultMessage;
     }
 
     public void login(String username, String password, Context context) {
-        Log.d("LoginActivity", "in viewmodel 1");
-        OkHttpClient client = new OkHttpClient();
+        makeAuthRequest(username, password, context, "/login", true);
+    }
 
+    public void register(String username, String password, Context context) {
+        makeAuthRequest(username, password, context, "/register", false);
+    }
+
+    private void makeAuthRequest(String username, String password, Context context, String endpoint, boolean isLogin) {
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
@@ -49,42 +54,38 @@ public class AuthViewModel extends ViewModel {
         );
 
         Request request = new Request.Builder()
-                .url(context.getString(R.string.api_url) + "/login")
+                .url(context.getString(R.string.api_url) + endpoint)
                 .post(body)
                 .build();
 
-        Log.d("LoginActivity", "in viewmodel 2");
-
         client.newCall(request).enqueue(new Callback() {
-
-
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
-                Log.d("LoginActivity", "in viewmodel 5");
+                String responseBody = response.body().string();
+
                 if (response.isSuccessful()) {
-                    Log.d("LoginActivity", "in viewmodel 3");
-                    try {
-                        JSONObject resJson = new JSONObject(response.body().string());
-                        String token = resJson.getString("jwt_token");
-                        new JwtService(context).saveToken(token);
-                        resultMessage.postValue("Login successful\nJWT: " + token);
-                    } catch (JSONException e) {
-                        resultMessage.postValue("Invalid response format");
+                    if (isLogin) {
+                        try {
+                            JSONObject resJson = new JSONObject(responseBody);
+                            String token = resJson.getString("jwt_token");
+                            new JwtService(context).saveToken(token);
+                            resultMessage.postValue("Login successful\nJWT: " + token);
+                        } catch (JSONException e) {
+                            resultMessage.postValue("Invalid response format");
+                        }
+                    } else {
+                        resultMessage.postValue("Registration successful");
                     }
                 } else {
-                    Log.d("LoginActivity", "in viewmodel 4");
-                    resultMessage.postValue("Login failed: " + response.body().string());
+                    resultMessage.postValue((isLogin ? "Login" : "Registration") + " failed: " + responseBody);
                 }
             }
 
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
-                Log.d("LoginActivity", e.getMessage());
+                resultMessage.postValue("Network error: " + e.getMessage());
+                Log.d("AuthViewModel", e.getMessage());
             }
         });
-    }
-
-    public void register(String username, String password, Context context) {
-        // Implement similarly to login()
     }
 }

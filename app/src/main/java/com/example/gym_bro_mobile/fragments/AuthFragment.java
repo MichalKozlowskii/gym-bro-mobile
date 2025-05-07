@@ -42,13 +42,13 @@ public class AuthFragment extends Fragment {
             authViewModel.login(username, password, requireContext());
         });
 
-        /*binding.btnRegister.setOnClickListener(v -> {
+        binding.btnRegister.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
             authViewModel.register(username, password, requireContext());
         });
 
-        binding.btnGitHub.setOnClickListener(v -> {
+       /* binding.btnGitHub.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "GitHub login not implemented yet", Toast.LENGTH_SHORT).show();
         });*/
 
