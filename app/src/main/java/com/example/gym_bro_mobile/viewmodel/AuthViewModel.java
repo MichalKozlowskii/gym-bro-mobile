@@ -47,7 +47,7 @@ public class AuthViewModel extends ViewModel {
         );
 
         Request request = new Request.Builder()
-                .url(context.getString(R.string.api_url) + "/api/login") // replace with your actual URL
+                .url(context.getString(R.string.api_url) + "/login")
                 .post(body)
                 .build();
 
