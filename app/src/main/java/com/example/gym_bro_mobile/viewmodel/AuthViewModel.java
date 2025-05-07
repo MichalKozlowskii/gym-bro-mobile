@@ -2,6 +2,7 @@ package com.example.gym_bro_mobile.viewmodel;
 
 import android.content.Context;
 import android.telecom.Call;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -24,13 +25,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AuthViewModel extends ViewModel {
-    private final MutableLiveData<String> error = new MutableLiveData<>(null);
+    MutableLiveData<String> resultMessage = new MutableLiveData<>();
 
-    public LiveData<String> getError() {
-        return error;
+    public LiveData<String> getResultMessage() {
+        return resultMessage;
     }
 
     public void login(String username, String password, Context context) {
+        Log.d("LoginActivity", "in viewmodel 1");
         OkHttpClient client = new OkHttpClient();
 
         JSONObject json = new JSONObject();
@@ -38,7 +40,7 @@ public class AuthViewModel extends ViewModel {
             json.put("username", username);
             json.put("password", password);
         } catch (JSONException e) {
-            error.setValue("JSON error");
+            resultMessage.setValue("JSON error");
             return;
         }
 
@@ -51,27 +53,33 @@ public class AuthViewModel extends ViewModel {
                 .post(body)
                 .build();
 
+        Log.d("LoginActivity", "in viewmodel 2");
+
         client.newCall(request).enqueue(new Callback() {
 
 
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
+                Log.d("LoginActivity", "in viewmodel 5");
                 if (response.isSuccessful()) {
+                    Log.d("LoginActivity", "in viewmodel 3");
                     try {
                         JSONObject resJson = new JSONObject(response.body().string());
                         String token = resJson.getString("jwt_token");
                         new JwtService(context).saveToken(token);
+                        resultMessage.postValue("Login successful\nJWT: " + token);
                     } catch (JSONException e) {
-                        error.postValue("Invalid response format");
+                        resultMessage.postValue("Invalid response format");
                     }
                 } else {
-                    error.postValue("Login failed: " + response.message());
+                    Log.d("LoginActivity", "in viewmodel 4");
+                    resultMessage.postValue("Login failed: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
-
+                Log.d("LoginActivity", e.getMessage());
             }
         });
     }

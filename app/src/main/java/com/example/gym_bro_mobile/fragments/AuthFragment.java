@@ -1,6 +1,7 @@
 package com.example.gym_bro_mobile.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class AuthFragment extends Fragment {
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
+            Log.d("LoginActivity", "Login button clicked");
             authViewModel.login(username, password, requireContext());
         });
 
@@ -50,10 +52,9 @@ public class AuthFragment extends Fragment {
             Toast.makeText(requireContext(), "GitHub login not implemented yet", Toast.LENGTH_SHORT).show();
         });*/
 
-        authViewModel.getError().observe(getViewLifecycleOwner(), error -> {
-            if (error != null) {
-                System.out.println("lipa");
-            }
+        authViewModel.getResultMessage().observe(getViewLifecycleOwner(), message -> {
+            binding.tvResult.setVisibility(View.VISIBLE);
+            binding.tvResult.setText(message);
         });
     }
 
