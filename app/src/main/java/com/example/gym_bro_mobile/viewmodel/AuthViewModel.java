@@ -84,7 +84,7 @@ public class AuthViewModel extends ViewModel {
 
     private void navigateToApp(View view) {
         view.post(() -> Navigation.findNavController(view)
-                .navigate(R.id.action_authFragment_to_mainFragment));
+                .navigate(R.id.action_authFragment_to_exercisesFragment));
     }
 
     private void makeAuthRequest(String username, String password, String endpoint, boolean isLogin) {

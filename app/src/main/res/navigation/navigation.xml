@@ -9,15 +9,15 @@
         android:name="com.example.gym_bro_mobile.fragments.AuthFragment"
         android:label="AuthFragment" >
         <action
-            android:id="@+id/action_authFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_authFragment_to_exercisesFragment"
+            app:destination="@id/exercisesFragment" />
     </fragment>
     <fragment
-        android:id="@+id/mainFragment"
+        android:id="@+id/exercisesFragment"
         android:name="com.example.gym_bro_mobile.fragments.ExercisesFragment"
-        android:label="MainFragment" >
+        android:label="ExercisesFragment" >
         <action
-            android:id="@+id/action_mainFragment_to_authFragment"
+            android:id="@+id/action_exercisesFragment_to_authFragment"
             app:destination="@id/authFragment" />
     </fragment>
 </navigation>
