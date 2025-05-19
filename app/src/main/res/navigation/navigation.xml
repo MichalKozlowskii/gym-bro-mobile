@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.gym_bro_mobile.fragments.MainFragment"
+        android:name="com.example.gym_bro_mobile.fragments.ExercisesFragment"
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_authFragment"
