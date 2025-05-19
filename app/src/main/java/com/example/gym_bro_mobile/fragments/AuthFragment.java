@@ -50,10 +50,6 @@ public class AuthFragment extends Fragment {
             authViewModel.register(username, password, requireContext());
         });
 
-       /* binding.btnGitHub.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "GitHub login not implemented yet", Toast.LENGTH_SHORT).show();
-        });*/
-
         authViewModel.getResultMessage().observe(getViewLifecycleOwner(), message -> {
             binding.tvResult.setVisibility(View.VISIBLE);
             binding.tvResult.setText(message);

@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.gym_bro_mobile.R;
@@ -46,8 +45,6 @@ public class AuthViewModel extends ViewModel {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
-                String responseBody = response.body().string();
-
                 if (response.isSuccessful()) {
                     view.post(() -> {
                         Navigation.findNavController(view).navigate(R.id.action_authFragment_to_mainFragment);
