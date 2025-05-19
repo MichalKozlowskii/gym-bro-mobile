@@ -1,6 +1,6 @@
 package com.example.gym_bro_mobile.viewmodel;
 
-import android.content.Context;
+import android.app.Application;
 import android.util.Log;
 import android.view.View;
 
@@ -18,6 +18,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -25,19 +28,30 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+@HiltViewModel
 public class AuthViewModel extends ViewModel {
+
+    private final OkHttpClient client;
+    private final JwtService jwtService;
+    private final Application app;
     private final MutableLiveData<String> resultMessage = new MutableLiveData<>();
-    private final OkHttpClient client = new OkHttpClient();
+
+    @Inject
+    public AuthViewModel(OkHttpClient client, JwtService jwtService, Application app) {
+        this.client = client;
+        this.jwtService = jwtService;
+        this.app = app;
+    }
 
     public LiveData<String> getResultMessage() {
         return resultMessage;
     }
 
-    public void validateJWT(Context context, View view) {
-        String jwt = new JwtService(context).getToken();
+    public void validateJWT(View view) {
+        String jwt = jwtService.getToken();
 
         Request request = new Request.Builder()
-                .url(context.getString(R.string.api_url) + "/exercise")
+                .url(app.getString(R.string.api_url) + "/exercise")
                 .addHeader("Authorization", "Bearer " + jwt)
                 .get()
                 .build();
@@ -46,29 +60,30 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    view.post(() -> {
-                        Navigation.findNavController(view).navigate(R.id.action_authFragment_to_mainFragment);
-                    });
+                    view.post(() -> Navigation.findNavController(view)
+                            .navigate(R.id.action_authFragment_to_mainFragment));
+                } else {
+                    view.post(() -> resultMessage.setValue("Session expired. Please log in."));
                 }
             }
 
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
-                resultMessage.postValue("Network error: " + e.getMessage());
-                Log.d("AuthViewModel", e.getMessage());
+                view.post(() -> resultMessage.setValue("Network error: " + e.getMessage()));
+                Log.e("AuthViewModel", e.getMessage(), e);
             }
         });
     }
 
-    public void login(String username, String password, Context context) {
-        makeAuthRequest(username, password, context, "/login", true);
+    public void login(String username, String password) {
+        makeAuthRequest(username, password, "/login", true);
     }
 
-    public void register(String username, String password, Context context) {
-        makeAuthRequest(username, password, context, "/register", false);
+    public void register(String username, String password) {
+        makeAuthRequest(username, password, "/register", false);
     }
 
-    private void makeAuthRequest(String username, String password, Context context, String endpoint, boolean isLogin) {
+    private void makeAuthRequest(String username, String password, String endpoint, boolean isLogin) {
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
@@ -83,7 +98,7 @@ public class AuthViewModel extends ViewModel {
         );
 
         Request request = new Request.Builder()
-                .url(context.getString(R.string.api_url) + endpoint)
+                .url(app.getString(R.string.api_url) + endpoint)
                 .post(body)
                 .build();
 
@@ -97,8 +112,8 @@ public class AuthViewModel extends ViewModel {
                         try {
                             JSONObject resJson = new JSONObject(responseBody);
                             String token = resJson.getString("jwt_token");
-                            new JwtService(context).saveToken(token);
-                            resultMessage.postValue("Login successful\nJWT: " + token);
+                            jwtService.saveToken(token);
+                            resultMessage.postValue("Login successful");
                         } catch (JSONException e) {
                             resultMessage.postValue("Invalid response format");
                         }
@@ -113,8 +128,9 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
                 resultMessage.postValue("Network error: " + e.getMessage());
-                Log.d("AuthViewModel", e.getMessage());
+                Log.e("AuthViewModel", e.getMessage(), e);
             }
         });
     }
 }
+

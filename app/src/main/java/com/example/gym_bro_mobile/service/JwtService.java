@@ -3,11 +3,16 @@ package com.example.gym_bro_mobile.service;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class JwtService {
     private static final String PREFS_NAME = "auth_prefs";
     private static final String KEY_JWT = "jwt_token";
     private final SharedPreferences prefs;
 
+    @Inject
     public JwtService(Context context) {
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }

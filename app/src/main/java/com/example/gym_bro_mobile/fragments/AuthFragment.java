@@ -9,11 +9,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.gym_bro_mobile.databinding.FragmentAuthBinding;
 import com.example.gym_bro_mobile.viewmodel.AuthViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AuthFragment extends Fragment {
 
     private FragmentAuthBinding binding;
@@ -33,21 +37,22 @@ public class AuthFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // ✅ Proper Hilt way in Java
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        authViewModel.validateJWT(requireContext(), requireView());
+        authViewModel.validateJWT(view);
 
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
             Log.d("LoginActivity", "Login button clicked");
-            authViewModel.login(username, password, requireContext());
+            authViewModel.login(username, password);
         });
 
         binding.btnRegister.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
-            authViewModel.register(username, password, requireContext());
+            authViewModel.register(username, password);
         });
 
         authViewModel.getResultMessage().observe(getViewLifecycleOwner(), message -> {
@@ -62,4 +67,3 @@ public class AuthFragment extends Fragment {
         binding = null;
     }
 }
-
