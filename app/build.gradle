@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.example.gym_bro_mobile'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.gym_bro_mobile"
-        minSdk 28
-        targetSdk 34
+        minSdk 33
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -22,6 +22,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -34,7 +39,23 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    // viewmodel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.7.0"
+
+    // jetpack navigation
+    implementation "androidx.navigation:navigation-fragment-ktx"
+    implementation "androidx.navigation:navigation-ui-ktx"
+
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 }
