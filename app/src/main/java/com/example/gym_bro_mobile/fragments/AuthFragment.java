@@ -46,13 +46,13 @@ public class AuthFragment extends Fragment {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
             Log.d("LoginActivity", "Login button clicked");
-            authViewModel.login(username, password);
+            authViewModel.login(username, password, view);
         });
 
         binding.btnRegister.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
-            authViewModel.register(username, password);
+            authViewModel.register(username, password, view);
         });
 
         authViewModel.getResultMessage().observe(getViewLifecycleOwner(), message -> {

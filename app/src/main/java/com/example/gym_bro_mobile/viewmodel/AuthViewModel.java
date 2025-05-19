@@ -60,10 +60,7 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    view.post(() -> Navigation.findNavController(view)
-                            .navigate(R.id.action_authFragment_to_mainFragment));
-                } else {
-                    view.post(() -> resultMessage.setValue("Session expired. Please log in."));
+                    navigateToApp(view);
                 }
             }
 
@@ -75,12 +72,19 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
-    public void login(String username, String password) {
+    public void login(String username, String password, View view) {
         makeAuthRequest(username, password, "/login", true);
+        navigateToApp(view);
     }
 
-    public void register(String username, String password) {
+    public void register(String username, String password, View view) {
         makeAuthRequest(username, password, "/register", false);
+        navigateToApp(view);
+    }
+
+    private void navigateToApp(View view) {
+        view.post(() -> Navigation.findNavController(view)
+                .navigate(R.id.action_authFragment_to_mainFragment));
     }
 
     private void makeAuthRequest(String username, String password, String endpoint, boolean isLogin) {
