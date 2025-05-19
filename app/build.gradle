@@ -59,6 +59,7 @@ dependencies {
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.51.1"

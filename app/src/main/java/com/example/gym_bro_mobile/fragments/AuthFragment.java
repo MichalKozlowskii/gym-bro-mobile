@@ -37,7 +37,6 @@ public class AuthFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // ✅ Proper Hilt way in Java
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         authViewModel.validateJWT(view);
