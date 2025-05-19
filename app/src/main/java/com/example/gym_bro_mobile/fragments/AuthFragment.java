@@ -35,6 +35,8 @@ public class AuthFragment extends Fragment {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
+        authViewModel.validateJWT(requireContext(), requireView());
+
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();

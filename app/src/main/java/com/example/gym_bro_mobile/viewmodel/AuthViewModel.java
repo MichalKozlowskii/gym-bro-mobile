@@ -2,11 +2,14 @@ package com.example.gym_bro_mobile.viewmodel;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.service.JwtService;
@@ -29,6 +32,35 @@ public class AuthViewModel extends ViewModel {
 
     public LiveData<String> getResultMessage() {
         return resultMessage;
+    }
+
+    public void validateJWT(Context context, View view) {
+        String jwt = new JwtService(context).getToken();
+
+        Request request = new Request.Builder()
+                .url(context.getString(R.string.api_url) + "/exercise")
+                .addHeader("Authorization", "Bearer " + jwt)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
+                String responseBody = response.body().string();
+
+                if (response.isSuccessful()) {
+                    view.post(() -> {
+                        Navigation.findNavController(view).navigate(R.id.action_authFragment_to_mainFragment);
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                resultMessage.postValue("Network error: " + e.getMessage());
+                Log.d("AuthViewModel", e.getMessage());
+            }
+        });
     }
 
     public void login(String username, String password, Context context) {
