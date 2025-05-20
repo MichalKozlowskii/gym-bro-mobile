@@ -49,7 +49,7 @@ public class ExercisesViewModel extends ViewModel {
             String jwt = jwtService.getToken();
 
             Request request = new Request.Builder()
-                    .url(app.getString(R.string.api_url) + "/exercise")
+                    .url(app.getString(R.string.api_url) + "/exercise?pageNumber=1&pageSize=1000")
                     .addHeader("Authorization", "Bearer " + jwt)
                     .get()
                     .build();

@@ -45,7 +45,6 @@ public class AuthFragment extends Fragment {
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
-            Log.d("LoginActivity", "Login button clicked");
             authViewModel.login(username, password, view);
         });
 
