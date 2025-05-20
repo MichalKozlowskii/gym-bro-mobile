@@ -9,13 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.databinding.FragmentWorkoutPlansBinding;
 import com.example.gym_bro_mobile.model.WorkoutPlan;
 import com.example.gym_bro_mobile.rv.workoutplan.OnWorkoutPlanClickListener;
 import com.example.gym_bro_mobile.rv.workoutplan.WorkoutPlanAdapter;
 import com.example.gym_bro_mobile.viewmodel.WorkoutPlansViewModel;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -47,13 +50,22 @@ public class WorkoutPlansFragment extends Fragment {
 
         workoutPlansViewModel.getWorkoutPlans().observe(getViewLifecycleOwner(), this::updateWorkoutPlanList);
         workoutPlansViewModel.loadWorkoutPlans(view);
+
+        binding.addWorkoutPlanFAB.setOnClickListener(v -> {
+            Navigation.findNavController(view)
+                    .navigate(R.id.action_workoutPlansFragment_to_workoutPlanFormFragment);
+        });
     }
 
     private void setupRecyclerView() {
         adapter = new WorkoutPlanAdapter(new OnWorkoutPlanClickListener() {
             @Override
             public void onClick(WorkoutPlan plan) {
-
+                Bundle args = new Bundle();
+                String planJson = new Gson().toJson(plan);
+                args.putString(WorkoutPlanFormFragment.ARG_WORKOUT_PLAN_JSON, planJson);
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_workoutPlansFragment_to_workoutPlanFormFragment, args);
             }
         });
 

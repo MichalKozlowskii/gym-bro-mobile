@@ -9,6 +9,9 @@ public class SetsReps {
         this.reps = reps;
     }
 
+    public SetsReps() {
+    }
+
     public Integer getSets() {
         return sets;
     }
