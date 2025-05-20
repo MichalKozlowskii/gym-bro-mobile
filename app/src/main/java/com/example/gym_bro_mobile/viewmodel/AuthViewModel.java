@@ -73,13 +73,11 @@ public class AuthViewModel extends ViewModel {
     }
 
     public void login(String username, String password, View view) {
-        makeAuthRequest(username, password, "/login", true);
-        navigateToApp(view);
+        makeAuthRequest(username, password, "/login", true, view);
     }
 
     public void register(String username, String password, View view) {
-        makeAuthRequest(username, password, "/register", false);
-        navigateToApp(view);
+        makeAuthRequest(username, password, "/register", false, view);
     }
 
     private void navigateToApp(View view) {
@@ -87,7 +85,7 @@ public class AuthViewModel extends ViewModel {
                 .navigate(R.id.action_authFragment_to_exercisesFragment));
     }
 
-    private void makeAuthRequest(String username, String password, String endpoint, boolean isLogin) {
+    private void makeAuthRequest(String username, String password, String endpoint, boolean isLogin, View view) {
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
@@ -117,7 +115,7 @@ public class AuthViewModel extends ViewModel {
                             JSONObject resJson = new JSONObject(responseBody);
                             String token = resJson.getString("jwt_token");
                             jwtService.saveToken(token);
-                            resultMessage.postValue("Login successful");
+                            navigateToApp(view);
                         } catch (JSONException e) {
                             resultMessage.postValue("Invalid response format");
                         }

@@ -49,4 +49,14 @@ public class Exercise {
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", demonstrationUrl='" + demonstrationUrl + '\'' +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }

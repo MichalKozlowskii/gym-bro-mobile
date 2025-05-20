@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.databinding.FragmentAuthBinding;
 import com.example.gym_bro_mobile.viewmodel.AuthViewModel;
 
@@ -29,6 +29,7 @@ public class AuthFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentAuthBinding.inflate(inflater, container, false);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         return binding.getRoot();
     }
 
@@ -37,7 +38,7 @@ public class AuthFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        requireActivity().findViewById(R.id.bottom_navigation).setVisibility(View.INVISIBLE);
 
         authViewModel.validateJWT(view);
 

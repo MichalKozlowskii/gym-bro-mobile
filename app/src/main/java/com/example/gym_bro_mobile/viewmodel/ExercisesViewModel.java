@@ -3,16 +3,20 @@ package com.example.gym_bro_mobile.viewmodel;
 import android.app.Application;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.Navigation;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlinx.coroutines.CoroutineScope;
 import okhttp3.OkHttpClient;
 
 import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.model.Exercise;
+import com.example.gym_bro_mobile.model.ExercisePage;
+import com.example.gym_bro_mobile.service.JwtService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,37 +34,37 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @HiltViewModel
-public class ExercisesViewModel {
+public class ExercisesViewModel extends ViewModel {
     private final OkHttpClient client;
     private final Gson gson;
     private final Application app;
+    private final JwtService jwtService;
     private final MutableLiveData<List<Exercise>> exercises = new MutableLiveData<>();
 
     @Inject
-    public ExercisesViewModel(OkHttpClient client, Gson gson, Application app) {
+    public ExercisesViewModel(OkHttpClient client, Gson gson, Application app, JwtService jwtService) {
         this.client = client;
         this.gson = gson;
         this.app = app;
-    }
-
-    public LiveData<List<Exercise>> getExercises() {
-        return exercises;
+        this.jwtService = jwtService;
     }
 
     public void loadExercises(View view) {
         new Thread(() -> {
+            String jwt = jwtService.getToken();
+
             Request request = new Request.Builder()
-                    .url("https://your-api.com/api/exercises")
+                    .url(app.getString(R.string.api_url) + "/exercise")
+                    .addHeader("Authorization", "Bearer " + jwt)
                     .get()
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Type listType = new TypeToken<List<Exercise>>() {}.getType();
-                    List<Exercise> parsed = gson.fromJson(response.body().charStream(), listType);
+                    ExercisePage page = gson.fromJson(response.body().charStream(), ExercisePage.class);
+                    List<Exercise> list = page.getContent();
 
-                    // Post to LiveData from background thread
-                    exercises.postValue(parsed);
+                    exercises.postValue(list);
                 } else {
                     if (response.code() == 401) {
                         view.post(() -> Navigation.findNavController(view)
