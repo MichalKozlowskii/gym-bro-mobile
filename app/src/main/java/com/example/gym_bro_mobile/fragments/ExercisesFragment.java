@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.databinding.FragmentExercisesBinding;
 import com.example.gym_bro_mobile.model.Exercise;
-import com.example.gym_bro_mobile.rv.ExerciseAdapter;
-import com.example.gym_bro_mobile.rv.OnExerciseClickListener;
+import com.example.gym_bro_mobile.rv.exercise.ExerciseAdapter;
+import com.example.gym_bro_mobile.rv.exercise.OnExerciseClickListener;
 import com.example.gym_bro_mobile.viewmodel.ExercisesViewModel;
 
 import java.util.List;

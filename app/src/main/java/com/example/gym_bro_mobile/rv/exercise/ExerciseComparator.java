@@ -1,4 +1,4 @@
-package com.example.gym_bro_mobile.rv;
+package com.example.gym_bro_mobile.rv.exercise;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -9,7 +9,7 @@ public class ExerciseComparator extends DiffUtil.ItemCallback<Exercise> {
 
     @Override
     public boolean areItemsTheSame(@NonNull Exercise oldItem, @NonNull Exercise newItem) {
-        return oldItem.getId() == newItem.getId();
+        return oldItem.getId().equals(newItem.getId());
     }
 
     @Override

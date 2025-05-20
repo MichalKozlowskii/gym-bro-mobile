@@ -1,7 +1,6 @@
 package com.example.gym_bro_mobile.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.gym_bro_mobile.databinding.FragmentWorkoutPlansBinding;
+import com.example.gym_bro_mobile.model.WorkoutPlan;
+import com.example.gym_bro_mobile.rv.workoutplan.OnWorkoutPlanClickListener;
+import com.example.gym_bro_mobile.rv.workoutplan.WorkoutPlanAdapter;
 import com.example.gym_bro_mobile.viewmodel.WorkoutPlansViewModel;
+
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -19,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class WorkoutPlansFragment extends Fragment {
     private FragmentWorkoutPlansBinding binding;
     private WorkoutPlansViewModel workoutPlansViewModel;
+    private WorkoutPlanAdapter adapter;
 
     @Nullable
     @Override
@@ -36,18 +43,31 @@ public class WorkoutPlansFragment extends Fragment {
 
         requireActivity().findViewById(com.example.gym_bro_mobile.R.id.bottom_navigation).setVisibility(View.VISIBLE);
 
-        workoutPlansViewModel.getWorkoutPlans().observe(getViewLifecycleOwner(), workoutPlans -> {
-            Log.d("11", "elo");
-            if (workoutPlans != null) {
-                for (int i = 0; i < workoutPlans.size(); i++) {
-                    // Log each workout plan's name (or any property you want to check)
-                    android.util.Log.d("WorkoutPlansFragment", "Plan #" + i + ": " + workoutPlans.get(i).getName());
-                }
-            } else {
-                android.util.Log.d("WorkoutPlansFragment", "No workout plans received");
-            }
-        });
+        setupRecyclerView();
+
+        workoutPlansViewModel.getWorkoutPlans().observe(getViewLifecycleOwner(), this::updateWorkoutPlanList);
         workoutPlansViewModel.loadWorkoutPlans(view);
     }
 
+    private void setupRecyclerView() {
+        adapter = new WorkoutPlanAdapter(new OnWorkoutPlanClickListener() {
+            @Override
+            public void onClick(WorkoutPlan plan) {
+
+            }
+        });
+
+        binding.rvWorkoutplans.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvWorkoutplans.setAdapter(adapter);
+    }
+
+    private void updateWorkoutPlanList(List<WorkoutPlan> workoutPlans) {
+        adapter.submitList(workoutPlans);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }
