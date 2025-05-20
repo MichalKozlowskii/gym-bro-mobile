@@ -11,9 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.databinding.FragmentAuthBinding;
 import com.example.gym_bro_mobile.viewmodel.AuthViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AuthFragment extends Fragment {
 
     private FragmentAuthBinding binding;
@@ -25,6 +29,7 @@ public class AuthFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentAuthBinding.inflate(inflater, container, false);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         return binding.getRoot();
     }
 
@@ -33,26 +38,21 @@ public class AuthFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        requireActivity().findViewById(R.id.bottom_navigation).setVisibility(View.INVISIBLE);
 
-        authViewModel.validateJWT(requireContext(), requireView());
+        authViewModel.validateJWT(view);
 
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
-            Log.d("LoginActivity", "Login button clicked");
-            authViewModel.login(username, password, requireContext());
+            authViewModel.login(username, password, view);
         });
 
         binding.btnRegister.setOnClickListener(v -> {
             String username = binding.etUsername.getText().toString().trim();
             String password = binding.etPassword.getText().toString().trim();
-            authViewModel.register(username, password, requireContext());
+            authViewModel.register(username, password, view);
         });
-
-       /* binding.btnGitHub.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "GitHub login not implemented yet", Toast.LENGTH_SHORT).show();
-        });*/
 
         authViewModel.getResultMessage().observe(getViewLifecycleOwner(), message -> {
             binding.tvResult.setVisibility(View.VISIBLE);
@@ -66,4 +66,3 @@ public class AuthFragment extends Fragment {
         binding = null;
     }
 }
-
