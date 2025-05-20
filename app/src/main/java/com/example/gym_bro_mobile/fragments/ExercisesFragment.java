@@ -11,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.databinding.FragmentExercisesBinding;
 import com.example.gym_bro_mobile.model.Exercise;
 import com.example.gym_bro_mobile.rv.ExerciseAdapter;
@@ -50,6 +52,10 @@ public class ExercisesFragment extends Fragment {
 
         exercisesViewModel.getExercises().observe(getViewLifecycleOwner(), this::updateExercises);
         exercisesViewModel.loadExercises(view);
+
+        binding.addExerciseFab.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_exercisesFragment_to_exerciseFormFragment);
+        });
     }
 
     private void setupRecyclerView() {
