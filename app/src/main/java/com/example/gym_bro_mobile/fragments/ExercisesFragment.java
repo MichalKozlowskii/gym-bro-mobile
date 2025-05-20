@@ -54,7 +54,8 @@ public class ExercisesFragment extends Fragment {
         exercisesViewModel.loadExercises(view);
 
         binding.addExerciseFab.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_exercisesFragment_to_exerciseFormFragment);
+            Navigation.findNavController(v)
+                    .navigate(R.id.action_exercisesFragment_to_exerciseFormFragment);
         });
     }
 
@@ -62,8 +63,13 @@ public class ExercisesFragment extends Fragment {
         adapter = new ExerciseAdapter(new OnExerciseClickListener() {
             @Override
             public void onExerciseClick(Exercise exercise) {
-                // Do something on row click (e.g. navigate to details screen)
-                // Example: Toast or new Fragment
+                Bundle args = new Bundle();
+                args.putLong("exerciseId", exercise.getId());
+                args.putString("exerciseName", exercise.getName());
+                args.putString("exerciseDemonstrationUrl", exercise.getDemonstrationUrl());
+
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_exercisesFragment_to_exerciseFormFragment, args);
             }
 
             @Override

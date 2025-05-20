@@ -1,6 +1,7 @@
 package com.example.gym_bro_mobile.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 import android.view.View;
 
 import androidx.lifecycle.LiveData;
