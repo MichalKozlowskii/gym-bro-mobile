@@ -1,7 +1,8 @@
 package com.example.gym_bro_mobile.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +11,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.gym_bro_mobile.R;
 import com.example.gym_bro_mobile.databinding.FragmentExercisesBinding;
 import com.example.gym_bro_mobile.model.Exercise;
+import com.example.gym_bro_mobile.rv.ExerciseAdapter;
+import com.example.gym_bro_mobile.rv.OnExerciseClickListener;
 import com.example.gym_bro_mobile.viewmodel.ExercisesViewModel;
+
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ExercisesFragment extends Fragment {
+
     private FragmentExercisesBinding binding;
     private ExercisesViewModel exercisesViewModel;
+    private ExerciseAdapter adapter;
 
     @Nullable
     @Override
@@ -37,15 +44,38 @@ public class ExercisesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        requireActivity().findViewById(R.id.bottom_navigation).setVisibility(View.VISIBLE);
+        requireActivity().findViewById(com.example.gym_bro_mobile.R.id.bottom_navigation).setVisibility(View.VISIBLE);
 
+        setupRecyclerView();
+
+        exercisesViewModel.getExercises().observe(getViewLifecycleOwner(), this::updateExercises);
         exercisesViewModel.loadExercises(view);
+    }
 
-        exercisesViewModel.getExercises().observe(getViewLifecycleOwner(), exerciseList -> {
-            for (Exercise exercise : exerciseList) {
-                Log.d("ExercisesFragment", "Exercise: " + exercise.getName());
+    private void setupRecyclerView() {
+        adapter = new ExerciseAdapter(new OnExerciseClickListener() {
+            @Override
+            public void onExerciseClick(Exercise exercise) {
+                // Do something on row click (e.g. navigate to details screen)
+                // Example: Toast or new Fragment
+            }
+
+            @Override
+            public void onThumbnailClick(String videoUrl) {
+                if (videoUrl != null && !videoUrl.isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
+                    intent.setPackage("com.google.android.youtube"); // optional: force YouTube app
+                    startActivity(intent);
+                }
             }
         });
+
+        binding.rvExercises.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvExercises.setAdapter(adapter);
+    }
+
+    private void updateExercises(List<Exercise> exercises) {
+        adapter.submitList(exercises);
     }
 
     @Override

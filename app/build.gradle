@@ -64,4 +64,7 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:2.51.1"
     annotationProcessor "com.google.dagger:hilt-compiler:2.51.1" // Use annotationProcessor for Java
+
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
 }

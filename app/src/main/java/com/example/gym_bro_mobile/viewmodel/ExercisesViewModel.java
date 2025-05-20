@@ -3,14 +3,12 @@ package com.example.gym_bro_mobile.viewmodel;
 import android.app.Application;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.Navigation;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlinx.coroutines.CoroutineScope;
 import okhttp3.OkHttpClient;
 
 import com.example.gym_bro_mobile.R;
@@ -18,18 +16,11 @@ import com.example.gym_bro_mobile.model.Exercise;
 import com.example.gym_bro_mobile.model.ExercisePage;
 import com.example.gym_bro_mobile.service.JwtService;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -47,6 +38,10 @@ public class ExercisesViewModel extends ViewModel {
         this.gson = gson;
         this.app = app;
         this.jwtService = jwtService;
+    }
+
+    public LiveData<List<Exercise>> getExercises() {
+        return exercises;
     }
 
     public void loadExercises(View view) {
