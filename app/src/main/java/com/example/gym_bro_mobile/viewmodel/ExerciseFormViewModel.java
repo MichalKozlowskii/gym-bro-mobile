@@ -50,6 +50,10 @@ public class ExerciseFormViewModel extends ViewModel {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToExercises(view);
+                    } else {
+                        if (response.code() == 401) {
+                            navigateToAuth(view);
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -81,6 +85,10 @@ public class ExerciseFormViewModel extends ViewModel {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToExercises(view);
+                    } else {
+                        if (response.code() == 401) {
+                            navigateToAuth(view);
+                        }
                     }
                 }
             } catch (IOException | JSONException e) {
@@ -112,6 +120,10 @@ public class ExerciseFormViewModel extends ViewModel {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToExercises(view);
+                    } else {
+                        if (response.code() == 401) {
+                            navigateToAuth(view);
+                        }
                     }
                 }
             } catch (IOException | JSONException e) {
@@ -123,6 +135,11 @@ public class ExerciseFormViewModel extends ViewModel {
     private void navigateToExercises(View view) {
         view.post(() -> Navigation.findNavController(view)
                 .navigate(R.id.action_exerciseFormFragment_to_exercisesFragment));
+    }
+
+    private void navigateToAuth(View view) {
+        view.post(() -> Navigation.findNavController(view)
+                .navigate(R.id.action_exerciseFormFragment_to_authFragment));
     }
 
 }
