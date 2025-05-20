@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ExerciseFormFragment extends Fragment {
     private FramgentExerciseFormBinding binding;
     private ExerciseFormViewModel exerciseFormViewModel;
-    private Long id = null; // make id a field
+    private Long id = null;
 
     @Nullable
     @Override

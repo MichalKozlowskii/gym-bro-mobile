@@ -76,7 +76,6 @@ public class ExercisesFragment extends Fragment {
             public void onThumbnailClick(String videoUrl) {
                 if (videoUrl != null && !videoUrl.isEmpty()) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
-                    intent.setPackage("com.google.android.youtube"); // optional: force YouTube app
                     startActivity(intent);
                 }
             }
