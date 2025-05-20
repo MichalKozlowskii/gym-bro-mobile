@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/exerciseFragment"
+        android:id="@+id/exercisesFragment"
         android:icon="@drawable/ic_exercises"
         android:title="Exercises" />
 
     <item
-        android:id="@+id/workoutPlanFragment"
+        android:id="@+id/workoutPlansFragment"
         android:icon="@drawable/ic_workout_plans"
         android:title="Workout plans" />
 
