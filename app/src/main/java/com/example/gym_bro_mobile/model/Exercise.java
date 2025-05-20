@@ -1,6 +1,7 @@
 package com.example.gym_bro_mobile.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Exercise {
     private Integer id;
@@ -58,5 +59,18 @@ public class Exercise {
                 ", demonstrationUrl='" + demonstrationUrl + '\'' +
                 ", creationDate=" + creationDate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Exercise exercise = (Exercise) o;
+        return Objects.equals(id, exercise.id) && Objects.equals(name, exercise.name) && Objects.equals(demonstrationUrl, exercise.demonstrationUrl) && Objects.equals(creationDate, exercise.creationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, demonstrationUrl, creationDate);
     }
 }
