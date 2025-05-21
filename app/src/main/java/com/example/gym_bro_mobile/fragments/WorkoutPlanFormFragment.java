@@ -101,7 +101,7 @@ public class WorkoutPlanFormFragment extends Fragment {
             if (plan.getId() == null) {
                 viewModel.createWorkoutPlan(plan, view);
             } else {
-                // viewModel.updateWorkoutPlan(plan);
+                viewModel.updateWorkoutPlan(plan, view);
             }
 
             // TODO: popBackStack or navigate away

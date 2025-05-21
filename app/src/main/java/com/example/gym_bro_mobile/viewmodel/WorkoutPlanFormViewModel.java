@@ -76,51 +76,84 @@ public class WorkoutPlanFormViewModel extends ViewModel {
         exerciseRepository.loadExercises(view, exercises);
     }
 
-
     public void createWorkoutPlan(WorkoutPlan plan, View view) {
+        try {
+            JSONObject json = buildWorkoutPlanJson(plan);
+            String url = app.getString(R.string.api_url) + "/workout-plan/create";
+            sendWorkoutPlanRequest(url, "POST", json, view);
+        } catch (JSONException e) {
+            Log.e("WorkoutPlanFormVM", "JSON error: ", e);
+        }
+    }
+
+    public void updateWorkoutPlan(WorkoutPlan plan, View view) {
+        try {
+            JSONObject json = buildWorkoutPlanJson(plan);
+            String url = app.getString(R.string.api_url) + "/workout-plan/" + plan.getId();
+            sendWorkoutPlanRequest(url, "PUT", json, view);
+        } catch (JSONException e) {
+            Log.e("WorkoutPlanFormVM", "JSON error: ", e);
+        }
+    }
+
+
+    private void sendWorkoutPlanRequest(String url, String method, JSONObject json, View view) {
         new Thread(() -> {
             try {
-                JSONObject json = new JSONObject();
-                json.put("name", plan.getName());
-
-                if (plan.getExercises() != null && !plan.getExercises().isEmpty()) {
-                    JSONArray exercisesArray = new JSONArray();
-                    for (Exercise e : plan.getExercises()) {
-                        JSONObject obj = new JSONObject();
-                        obj.put("id", e.getId());
-                        exercisesArray.put(obj);
-                    }
-                    json.put("exercises", exercisesArray);
-                }
-
-                if (plan.getSetsReps() != null && !plan.getSetsReps().isEmpty()) {
-                    json.put("setsReps", new JSONArray(gson.toJson(plan.getSetsReps())));
-                }
-
                 RequestBody body = RequestBody.create(
                         json.toString(),
                         MediaType.get("application/json; charset=utf-8")
                 );
 
-                Request request = new Request.Builder()
-                        .url(app.getString(R.string.api_url) + "/workout-plan/create")
-                        .addHeader("Authorization", "Bearer " + jwtService.getToken())
-                        .post(body)
-                        .build();
+                Request.Builder builder = new Request.Builder()
+                        .url(url)
+                        .addHeader("Authorization", "Bearer " + jwtService.getToken());
+
+                if ("POST".equalsIgnoreCase(method)) {
+                    builder.post(body);
+                } else if ("PUT".equalsIgnoreCase(method)) {
+                    builder.put(body);
+                } else {
+                    throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+                }
+
+                Request request = builder.build();
 
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToWorkoutPlans(view);
+                    } else if (response.code() == 401) {
+                        navigateToAuth(view);
                     } else {
-                        if (response.code() == 401) {
-                            navigateToAuth(view);
-                        }
+                        Log.e("WorkoutPlanFormVM", "Server error: " + response.code());
                     }
                 }
-            } catch (IOException | JSONException e) {
-                Log.e("ExerciseFormVM", "Error: ", e);
+            } catch (IOException e) {
+                Log.e("WorkoutPlanFormVM", "Network error: ", e);
             }
         }).start();
+    }
+
+
+    private JSONObject buildWorkoutPlanJson(WorkoutPlan plan) throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("name", plan.getName());
+
+        if (plan.getExercises() != null && !plan.getExercises().isEmpty()) {
+            JSONArray exercisesArray = new JSONArray();
+            for (Exercise e : plan.getExercises()) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", e.getId());
+                exercisesArray.put(obj);
+            }
+            json.put("exercises", exercisesArray);
+        }
+
+        if (plan.getSetsReps() != null && !plan.getSetsReps().isEmpty()) {
+            json.put("setsReps", new JSONArray(gson.toJson(plan.getSetsReps())));
+        }
+
+        return json;
     }
 
     private void navigateToWorkoutPlans(View view) {
