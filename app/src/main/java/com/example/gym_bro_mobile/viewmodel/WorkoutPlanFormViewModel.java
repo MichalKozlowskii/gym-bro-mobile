@@ -3,6 +3,7 @@ package com.example.gym_bro_mobile.viewmodel;
 import android.app.Application;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -95,6 +96,37 @@ public class WorkoutPlanFormViewModel extends ViewModel {
             Log.e("WorkoutPlanFormVM", "JSON error: ", e);
         }
     }
+
+    public void deleteWorkoutPlan(long planId, View view) {
+        new Thread(() -> {
+            try {
+                String url = app.getString(R.string.api_url) + "/workout-plan/" + planId;
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .addHeader("Authorization", "Bearer " + jwtService.getToken())
+                        .delete()
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        navigateToWorkoutPlans(view);
+                    } else if (response.code() == 401) {
+                        navigateToAuth(view);
+                    } else if (response.code() == 500) {
+                        view.post(() ->
+                                Toast.makeText(
+                                        app.getApplicationContext(),
+                                        "Can't delete this workout plan because it's used in workout.",
+                                        Toast.LENGTH_LONG).show());
+                    }
+                }
+            } catch (IOException e) {
+                Log.e("WorkoutPlanFormVM", "Delete error: ", e);
+            }
+        }).start();
+    }
+
 
 
     private void sendWorkoutPlanRequest(String url, String method, JSONObject json, View view) {

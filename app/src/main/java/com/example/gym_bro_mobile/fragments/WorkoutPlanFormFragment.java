@@ -103,15 +103,12 @@ public class WorkoutPlanFormFragment extends Fragment {
             } else {
                 viewModel.updateWorkoutPlan(plan, view);
             }
-
-            // TODO: popBackStack or navigate away
         });
 
         binding.btnDelete.setOnClickListener(v -> {
             WorkoutPlan plan = viewModel.getCurrentPlan().getValue();
             if (plan != null && plan.getId() != null) {
-                // viewModel.deleteWorkoutPlan(plan.getId());
-                // TODO: popBackStack or navigate away
+                viewModel.deleteWorkoutPlan(plan.getId(), view);
             }
         });
     }
