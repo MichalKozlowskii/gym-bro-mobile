@@ -55,7 +55,11 @@ public class ExerciseFormViewModel extends ViewModel {
                         if (response.code() == 401) {
                             navigateToAuth(view);
                         } else if (response.code() == 500) {
-                            showToast(view, "Can't delete this exercise because it's used in workout plans.");
+                            view.post(() ->
+                                    Toast.makeText(
+                                            app.getApplicationContext(),
+                                            "Can't delete this exercise because it's used in workout plans.",
+                                            Toast.LENGTH_LONG).show());
                         }
                     }
                 }
@@ -143,9 +147,5 @@ public class ExerciseFormViewModel extends ViewModel {
     private void navigateToAuth(View view) {
         view.post(() -> Navigation.findNavController(view)
                 .navigate(R.id.action_exerciseFormFragment_to_authFragment));
-    }
-
-    private void showToast(View view, String message) {
-        view.post(() -> Toast.makeText(app.getApplicationContext(), message, Toast.LENGTH_LONG).show());
     }
 }
