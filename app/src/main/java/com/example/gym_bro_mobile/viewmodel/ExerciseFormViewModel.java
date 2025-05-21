@@ -3,6 +3,7 @@ package com.example.gym_bro_mobile.viewmodel;
 import android.app.Application;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.Navigation;
@@ -53,6 +54,8 @@ public class ExerciseFormViewModel extends ViewModel {
                     } else {
                         if (response.code() == 401) {
                             navigateToAuth(view);
+                        } else if (response.code() == 500) {
+                            showToast(view, "Can't delete this exercise because it's used in workout plans.");
                         }
                     }
                 }
@@ -142,4 +145,7 @@ public class ExerciseFormViewModel extends ViewModel {
                 .navigate(R.id.action_exerciseFormFragment_to_authFragment));
     }
 
+    private void showToast(View view, String message) {
+        view.post(() -> Toast.makeText(app.getApplicationContext(), message, Toast.LENGTH_LONG).show());
+    }
 }
