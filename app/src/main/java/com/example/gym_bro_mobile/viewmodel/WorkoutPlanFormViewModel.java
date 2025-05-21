@@ -84,8 +84,15 @@ public class WorkoutPlanFormViewModel extends ViewModel {
                 json.put("name", plan.getName());
 
                 if (plan.getExercises() != null && !plan.getExercises().isEmpty()) {
-                    json.put("exercises", new JSONArray(gson.toJson(plan.getExercises())));
+                    JSONArray exercisesArray = new JSONArray();
+                    for (Exercise e : plan.getExercises()) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("id", e.getId());
+                        exercisesArray.put(obj);
+                    }
+                    json.put("exercises", exercisesArray);
                 }
+
                 if (plan.getSetsReps() != null && !plan.getSetsReps().isEmpty()) {
                     json.put("setsReps", new JSONArray(gson.toJson(plan.getSetsReps())));
                 }
