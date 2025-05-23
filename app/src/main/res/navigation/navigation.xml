@@ -11,9 +11,6 @@
         <action
             android:id="@+id/action_authFragment_to_exercisesFragment"
             app:destination="@id/exercisesFragment" />
-        <action
-            android:id="@+id/action_authFragment_to_workoutPlansFragment"
-            app:destination="@id/workoutPlansFragment" />
     </fragment>
     <fragment
         android:id="@+id/exercisesFragment"
@@ -60,6 +57,14 @@
             app:destination="@id/workoutPlansFragment" />
         <action
             android:id="@+id/action_workoutPlanFormFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutsFragment"
+        android:name="com.example.gym_bro_mobile.fragments.WorkoutsFragment"
+        android:label="WorkoutsFragment" >
+        <action
+            android:id="@+id/action_workoutsFragment_to_authFragment"
             app:destination="@id/authFragment" />
     </fragment>
 </navigation>

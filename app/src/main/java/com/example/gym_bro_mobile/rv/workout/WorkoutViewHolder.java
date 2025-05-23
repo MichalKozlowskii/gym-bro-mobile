@@ -41,7 +41,7 @@ public class WorkoutViewHolder extends RecyclerView.ViewHolder {
 
             for (ExerciseSet set : sets) {
                 TextView setView = new TextView(binding.getRoot().getContext());
-                String text = "Reps: " + set.getReps() + ", Weight: " + set.getWeight();
+                String text = "Reps: " + set.getReps() + ", Weight: " + Math.round(set.getWeight() * 100) / 100.;
                 setView.setText(text);
                 setView.setTextColor(ContextCompat.getColor(binding.getRoot().getContext(), android.R.color.darker_gray));
                 setView.setTextSize(14f);
@@ -49,7 +49,7 @@ public class WorkoutViewHolder extends RecyclerView.ViewHolder {
             }
         }
 
-        binding.workoutRoot.setOnClickListener(v -> listener.onWorkoutClick(workout));
+        binding.workoutRoot.setOnClickListener(v -> listener.onClick(workout));
     }
 
     public static WorkoutViewHolder create(ViewGroup parent) {
