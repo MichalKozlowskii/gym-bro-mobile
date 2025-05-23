@@ -1,4 +1,4 @@
-package com.example.gym_bro_mobile.rv;
+package com.example.gym_bro_mobile.rv.exercise;
 
 import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;

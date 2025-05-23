@@ -3,6 +3,7 @@ package com.example.gym_bro_mobile.viewmodel;
 import android.app.Application;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.Navigation;
@@ -50,6 +51,16 @@ public class ExerciseFormViewModel extends ViewModel {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToExercises(view);
+                    } else {
+                        if (response.code() == 401) {
+                            navigateToAuth(view);
+                        } else if (response.code() == 500) {
+                            view.post(() ->
+                                    Toast.makeText(
+                                            app.getApplicationContext(),
+                                            "Can't delete this exercise because it's used in workout plans.",
+                                            Toast.LENGTH_LONG).show());
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -81,6 +92,10 @@ public class ExerciseFormViewModel extends ViewModel {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToExercises(view);
+                    } else {
+                        if (response.code() == 401) {
+                            navigateToAuth(view);
+                        }
                     }
                 }
             } catch (IOException | JSONException e) {
@@ -112,6 +127,10 @@ public class ExerciseFormViewModel extends ViewModel {
                 try (Response response = client.newCall(request).execute()) {
                     if (response.isSuccessful()) {
                         navigateToExercises(view);
+                    } else {
+                        if (response.code() == 401) {
+                            navigateToAuth(view);
+                        }
                     }
                 }
             } catch (IOException | JSONException e) {
@@ -125,4 +144,8 @@ public class ExerciseFormViewModel extends ViewModel {
                 .navigate(R.id.action_exerciseFormFragment_to_exercisesFragment));
     }
 
+    private void navigateToAuth(View view) {
+        view.post(() -> Navigation.findNavController(view)
+                .navigate(R.id.action_exerciseFormFragment_to_authFragment));
+    }
 }

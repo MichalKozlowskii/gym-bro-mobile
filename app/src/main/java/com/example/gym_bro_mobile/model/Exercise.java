@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Exercise {
-    private Integer id;
+    private Long id;
     private String name;
     private String demonstrationUrl;
     private LocalDateTime creationDate;
 
-    public Exercise(Integer id, String name, String demonstrationUrl, LocalDateTime creationDate) {
+    public Exercise(Long id, String name, String demonstrationUrl, LocalDateTime creationDate) {
         this.id = id;
         this.name = name;
         this.demonstrationUrl = demonstrationUrl;
@@ -19,11 +19,11 @@ public class Exercise {
     public Exercise() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
