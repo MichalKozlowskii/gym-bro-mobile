@@ -69,6 +69,12 @@
         <action
             android:id="@+id/action_workoutsFragment_to_workoutCreationFragment"
             app:destination="@id/workoutCreationFragment" />
+
+        <action
+            android:id="@+id/action_workoutsFragment_self"
+            app:destination="@id/workoutsFragment"
+            app:popUpTo="@id/workoutsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/workoutCreationFragment"

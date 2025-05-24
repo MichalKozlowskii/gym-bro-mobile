@@ -58,7 +58,10 @@ public class Workout {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Workout workout = (Workout) o;
-        return Objects.equals(id, workout.id) && Objects.equals(workoutPlan, workout.workoutPlan) && Objects.equals(exerciseSetMap, workout.exerciseSetMap) && Objects.equals(creationDate, workout.creationDate);
+        return Objects.equals(id, workout.id) &&
+                Objects.equals(workoutPlan, workout.workoutPlan) &&
+                Objects.equals(exerciseSetMap, workout.exerciseSetMap) &&
+                Objects.equals(creationDate, workout.creationDate);
     }
 
     @Override

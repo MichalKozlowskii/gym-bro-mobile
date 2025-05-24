@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.gym_bro_mobile.R;
@@ -20,6 +21,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -67,9 +69,57 @@ public class WorkoutsViewModel extends ViewModel {
                     WorkoutPage page = gson.fromJson(response.body().charStream(), WorkoutPage.class);
                     List<Workout> list = page.getContent();
 
-                    Log.d("11", list.get(0).toString());
-
                     workouts.postValue(list);
+                } else {
+                    if (response.code() == 401) {
+                        view.post(() -> Navigation.findNavController(view)
+                                .navigate(R.id.action_workoutCreationFragment_to_authFragment));
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void deleteWorkout(Long workoutId, View view) {
+        new Thread(() -> {
+            String jwt = jwtService.getToken();
+
+            Request request = new Request.Builder()
+                    .url(app.getString(R.string.api_url) + "/workout/" + workoutId)
+                    .addHeader("Authorization", "Bearer " + jwt)
+                    .delete()
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    loadWorkouts(view);
+                } else {
+                    if (response.code() == 401) {
+                        view.post(() -> Navigation.findNavController(view)
+                                .navigate(R.id.action_workoutPlansFragment_to_authFragment)); // change
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void deleteSet(Long workoutId, Long setId, View view) {
+        new Thread(() -> {
+            String jwt = jwtService.getToken();
+
+            Request request = new Request.Builder()
+                    .url(app.getString(R.string.api_url) + "/workout/" + workoutId + "/deleteset/" + setId)
+                    .addHeader("Authorization", "Bearer " + jwt)
+                    .delete()
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    loadWorkouts(view);
                 } else {
                     if (response.code() == 401) {
                         view.post(() -> Navigation.findNavController(view)
