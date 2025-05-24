@@ -53,7 +53,7 @@ public class WorkoutsFragment extends Fragment {
 
         binding.addWorkoutFAB.setOnClickListener(v -> {
             Navigation.findNavController(view)
-                    .navigate(R.id.action_workoutPlansFragment_to_workoutPlanFormFragment); // TODO: zmienić
+                    .navigate(R.id.action_workoutsFragment_to_workoutCreationFragment);
         });
     }
 

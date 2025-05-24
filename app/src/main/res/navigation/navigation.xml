@@ -66,5 +66,19 @@
         <action
             android:id="@+id/action_workoutsFragment_to_authFragment"
             app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_workoutsFragment_to_workoutCreationFragment"
+            app:destination="@id/workoutCreationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutCreationFragment"
+        android:name="com.example.gym_bro_mobile.fragments.WorkoutCreationFragment"
+        android:label="WorkoutCreationFragment" >
+        <action
+            android:id="@+id/action_workoutCreationFragment_to_workoutsFragment"
+            app:destination="@id/workoutsFragment" />
+        <action
+            android:id="@+id/action_workoutCreationFragment_to_authFragment"
+            app:destination="@id/authFragment" />
     </fragment>
 </navigation>
