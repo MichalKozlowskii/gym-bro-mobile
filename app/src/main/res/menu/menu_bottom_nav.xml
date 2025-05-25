@@ -10,7 +10,7 @@
         android:title="Workout plans" />
 
     <item
-        android:id="@+id/workoutFragment"
+        android:id="@+id/workoutsFragment"
         android:icon="@drawable/ic_workouts"
         android:title="Workouts" />
 
