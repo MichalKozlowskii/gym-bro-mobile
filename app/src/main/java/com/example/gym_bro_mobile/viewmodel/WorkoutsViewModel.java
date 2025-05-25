@@ -18,6 +18,10 @@ import com.example.gym_bro_mobile.model.WorkoutPage;
 import com.example.gym_bro_mobile.service.JwtService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -27,8 +31,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 @HiltViewModel
@@ -82,6 +88,43 @@ public class WorkoutsViewModel extends ViewModel {
         }).start();
     }
 
+    public void addSet(Long workoutId, Long exerciseId, int reps, float weight, View view) {
+        new Thread(() -> {
+            try {
+                JsonObject exerciseObj = new JsonObject();
+                exerciseObj.addProperty("id", exerciseId);
+
+                JsonObject payload = new JsonObject();
+                payload.add("exercise", exerciseObj);
+                payload.addProperty("weight", weight);
+                payload.addProperty("reps", reps);
+
+                RequestBody body = RequestBody.create(
+                        payload.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                Request request = new Request.Builder()
+                        .url(app.getString(R.string.api_url) + "/workout/" + workoutId + "/addset")
+                        .addHeader("Authorization", "Bearer " + jwtService.getToken())
+                        .post(body)
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        loadWorkouts(view);
+                    } else if (response.code() == 401) {
+                        navigateToAuth(view);
+                    } else {
+                        Log.e("WorkoutPlanFormVM", "Server error: " + response.code());
+                    }
+                }
+            } catch (IOException e) {
+                Log.e("WorkoutPlanFormVM", "Network error: ", e);
+            }
+        }).start();
+    }
+
     public void deleteWorkout(Long workoutId, View view) {
         new Thread(() -> {
             String jwt = jwtService.getToken();
@@ -97,8 +140,7 @@ public class WorkoutsViewModel extends ViewModel {
                     loadWorkouts(view);
                 } else {
                     if (response.code() == 401) {
-                        view.post(() -> Navigation.findNavController(view)
-                                .navigate(R.id.action_workoutPlansFragment_to_authFragment)); // change
+                        navigateToAuth(view);
                     }
                 }
             } catch (IOException e) {
@@ -122,13 +164,17 @@ public class WorkoutsViewModel extends ViewModel {
                     loadWorkouts(view);
                 } else {
                     if (response.code() == 401) {
-                        view.post(() -> Navigation.findNavController(view)
-                                .navigate(R.id.action_workoutPlansFragment_to_authFragment)); // change
+                        navigateToAuth(view);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private void navigateToAuth(View view) {
+        view.post(() -> Navigation.findNavController(view)
+                .navigate(R.id.action_workoutsFragment_to_authFragment));
     }
 }

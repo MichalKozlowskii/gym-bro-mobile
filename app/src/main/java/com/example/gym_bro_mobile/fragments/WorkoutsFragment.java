@@ -1,5 +1,6 @@
 package com.example.gym_bro_mobile.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.gym_bro_mobile.R;
+import com.example.gym_bro_mobile.databinding.DialogNewSetBinding;
 import com.example.gym_bro_mobile.databinding.FragmentWorkoutsBinding;
 import com.example.gym_bro_mobile.model.Exercise;
 import com.example.gym_bro_mobile.model.ExerciseSet;
@@ -58,6 +60,25 @@ public class WorkoutsFragment extends Fragment {
 
                     @Override
                     public void onAddSet(Workout workout, Exercise exercise) {
+                        LayoutInflater inflater = getLayoutInflater();
+                        DialogNewSetBinding binding = DialogNewSetBinding.inflate(inflater);
+
+                        binding.exerciseName.setText(exercise.getName());
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                        builder.setView(binding.getRoot());
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        binding.dialogButton.setOnClickListener(view -> {
+                            int reps = Integer.parseInt(binding.reps.getText().toString().trim());
+                            float weight = Float.parseFloat(binding.weight.getText().toString().trim());
+
+                            viewModel.addSet(workout.getId(), exercise.getId(), reps, weight, view);
+
+                            dialog.dismiss();
+                        });
                     }
 
                     @Override
