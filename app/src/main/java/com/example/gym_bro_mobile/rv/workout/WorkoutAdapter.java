@@ -1,5 +1,6 @@
 package com.example.gym_bro_mobile.rv.workout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +90,7 @@ public class WorkoutAdapter extends ListAdapter<Workout, WorkoutAdapter.WorkoutV
 
             exerciseContainer.removeAllViews();
 
-            for (Exercise exercise : workout.getExerciseSetMap().keySet()) {
+            for (Exercise exercise : workout.getWorkoutPlan().getExercises()) {
                 View exerciseRow = LayoutInflater.from(itemView.getContext()).inflate(R.layout.rv_exercise_row, exerciseContainer, false);
 
                 TextView exerciseName = exerciseRow.findViewById(R.id.exerciseName);
@@ -105,22 +106,25 @@ public class WorkoutAdapter extends ListAdapter<Workout, WorkoutAdapter.WorkoutV
                 });
 
                 setsContainer.removeAllViews();
-                for (ExerciseSet set : workout.getExerciseSetMap().get(exercise)) {
-                    View setRow = LayoutInflater.from(itemView.getContext()).inflate(R.layout.rv_set_row, setsContainer, false);
+                
+                if (workout.getExerciseSetMap().containsKey(exercise)) {
+                    for (ExerciseSet set : workout.getExerciseSetMap().get(exercise)) {
+                        View setRow = LayoutInflater.from(itemView.getContext()).inflate(R.layout.rv_set_row, setsContainer, false);
 
-                    TextView tvSetInfo = setRow.findViewById(R.id.setInfo);
-                    ImageButton btnDeleteSet = setRow.findViewById(R.id.btnDeleteSet);
+                        TextView tvSetInfo = setRow.findViewById(R.id.setInfo);
+                        ImageButton btnDeleteSet = setRow.findViewById(R.id.btnDeleteSet);
 
-                    String setInfo = "Reps: " + set.getReps() + ", Weight: " + set.getWeight() + " kg";
-                    tvSetInfo.setText(setInfo);
+                        String setInfo = "Reps: " + set.getReps() + ", Weight: " + set.getWeight() + " kg";
+                        tvSetInfo.setText(setInfo);
 
-                    btnDeleteSet.setOnClickListener(v -> {
-                        if (actionListener != null) {
-                            actionListener.onDeleteSet(workout, exercise, set);
-                        }
-                    });
+                        btnDeleteSet.setOnClickListener(v -> {
+                            if (actionListener != null) {
+                                actionListener.onDeleteSet(workout, exercise, set);
+                            }
+                        });
 
-                    setsContainer.addView(setRow);
+                        setsContainer.addView(setRow);
+                    }
                 }
 
                 exerciseContainer.addView(exerciseRow);
