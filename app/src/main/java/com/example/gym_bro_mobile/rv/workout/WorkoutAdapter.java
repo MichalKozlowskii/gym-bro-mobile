@@ -106,7 +106,7 @@ public class WorkoutAdapter extends ListAdapter<Workout, WorkoutAdapter.WorkoutV
                 });
 
                 setsContainer.removeAllViews();
-                
+
                 if (workout.getExerciseSetMap().containsKey(exercise)) {
                     for (ExerciseSet set : workout.getExerciseSetMap().get(exercise)) {
                         View setRow = LayoutInflater.from(itemView.getContext()).inflate(R.layout.rv_set_row, setsContainer, false);

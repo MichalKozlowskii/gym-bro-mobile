@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvExerciseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exercise Name"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <!-- Stats container -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Most reps -->
+            <TextView
+                android:id="@+id/tvMostReps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Most reps:"
+                android:textSize="16sp"
+                android:paddingVertical="4dp"/>
+
+            <!-- Least reps -->
+            <TextView
+                android:id="@+id/tvLeastReps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Least reps:"
+                android:textSize="16sp"
+                android:paddingVertical="4dp"/>
+
+            <!-- Most weight -->
+            <TextView
+                android:id="@+id/tvMostWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Most weight:"
+                android:textSize="16sp"
+                android:paddingVertical="4dp"/>
+
+            <!-- Least weight -->
+            <TextView
+                android:id="@+id/tvLeastWeight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Least weight:"
+                android:textSize="16sp"
+                android:paddingVertical="4dp"/>
+
+            <!-- Last set -->
+            <TextView
+                android:id="@+id/tvLastSet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last set:"
+                android:textSize="16sp"
+                android:paddingVertical="4dp"/>
+
+            <!-- Most recent (date/time) -->
+            <TextView
+                android:id="@+id/tvMostRecent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Most recent:"
+                android:textSize="16sp"
+                android:paddingVertical="4dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

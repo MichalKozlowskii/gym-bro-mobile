@@ -28,20 +28,11 @@ import okhttp3.Response;
 
 @HiltViewModel
 public class ExercisesViewModel extends ViewModel {
-    private final OkHttpClient client;
-    private final Gson gson;
-    private final Application app;
-    private final JwtService jwtService;
     private final ExerciseRepository exerciseRepository;
     private final MutableLiveData<List<Exercise>> exercises = new MutableLiveData<>();
 
     @Inject
-    public ExercisesViewModel(OkHttpClient client, Gson gson, Application app, JwtService jwtService,
-                              ExerciseRepository exerciseRepository) {
-        this.client = client;
-        this.gson = gson;
-        this.app = app;
-        this.jwtService = jwtService;
+    public ExercisesViewModel(ExerciseRepository exerciseRepository) {
         this.exerciseRepository = exerciseRepository;
     }
 
