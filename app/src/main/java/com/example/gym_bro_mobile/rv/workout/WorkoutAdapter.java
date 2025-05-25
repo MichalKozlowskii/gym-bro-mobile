@@ -114,7 +114,7 @@ public class WorkoutAdapter extends ListAdapter<Workout, WorkoutAdapter.WorkoutV
                         TextView tvSetInfo = setRow.findViewById(R.id.setInfo);
                         ImageButton btnDeleteSet = setRow.findViewById(R.id.btnDeleteSet);
 
-                        String setInfo = "Reps: " + set.getReps() + ", Weight: " + set.getWeight() + " kg";
+                        String setInfo = "Reps: " + set.getReps() + ", Weight: " + Math.round(set.getWeight() * 100) / 100. + " kg";
                         tvSetInfo.setText(setInfo);
 
                         btnDeleteSet.setOnClickListener(v -> {

@@ -49,9 +49,7 @@ public class WorkoutsFragment extends Fragment {
         binding.rvWorkouts.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         adapter = new WorkoutAdapter(
-                workout -> {
-                    // Handle workout click if needed
-                },
+                workout -> {},
                 new WorkoutAdapter.OnWorkoutActionListener() {
                     @Override
                     public void onDeleteWorkout(Workout workout) {
